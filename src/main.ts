@@ -9,14 +9,14 @@ import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUti
 // import frag from './shaders/textured.frag';
 // import vert from './shaders/textured.vert';
 
-//  import frag from './shaders/diffuse.frag';
-//  import vert from './shaders/diffuse.vert';
+ import frag from './shaders/diffuse.frag';
+ import vert from './shaders/diffuse.vert';
 
 // import frag from './shaders/textured.frag';
 // import vert from './shaders/textured.vert';
 
-import frag from './shaders/normals.frag';
-import vert from './shaders/normals.vert';
+// import frag from './shaders/normals.frag';
+// import vert from './shaders/normals.vert';
 
 
 async function main() {
