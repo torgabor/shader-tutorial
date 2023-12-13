@@ -11,7 +11,7 @@
     vec3 normalizedLightDirection = normalize(lightDirection);
     vec3 nNormal = normalize(vNormal);
     // Lambertian model
-     float lambertian = max(dot(nNormal, normalizedLightDirection), 0.0);
+    float lambertian = max(dot(nNormal, normalizedLightDirection), 0.0);
 
     vec3 finalColor = lightColor *  (sampledColor * (lambertian)) + sampledColor * ambientColor;  
     gl_FragColor = vec4(finalColor, 1.0);

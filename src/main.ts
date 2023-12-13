@@ -9,14 +9,17 @@ import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUti
 // import frag from './shaders/textured.frag';
 // import vert from './shaders/textured.vert';
 
- import frag from './shaders/diffuse.frag';
- import vert from './shaders/diffuse.vert';
+//  import frag from './shaders/diffuse.frag';
+//  import vert from './shaders/diffuse.vert';
+
+// import frag from './shaders/specular.frag';
+// import vert from './shaders/specular.vert';
 
 // import frag from './shaders/textured.frag';
 // import vert from './shaders/textured.vert';
 
-// import frag from './shaders/normals.frag';
-// import vert from './shaders/normals.vert';
+import frag from './shaders/normals.frag';
+import vert from './shaders/normals.vert';
 
 
 async function main() {
@@ -52,19 +55,21 @@ async function main() {
     objectToggle: false,
     lightColor: '#ffffff', // default white light
     ambientColor: '#3a3a3a', // default white light
+    specPower : 50.0, // specular power
     rotate: false
   };
 
-  // Create geometry
-  const geometry = new THREE.BoxGeometry(3, 3, 3);
-  geometry.computeTangents();
+  // Create cube geometry
+  const cubeGeometry = new THREE.BoxGeometry(3, 3, 3);
+  //compute the tangents (used for normal mapping)
+  cubeGeometry.computeTangents();
 
+  // Create crab geometry by loading from GLTF
   const gltfLoader = new GLTFLoader();
-
   const crabObject = (await gltfLoader.loadAsync('models/crab.glb')).scene;
 
   let crabGeometry: THREE.BufferGeometry = (crabObject.children[0] as THREE.Mesh).geometry;
-  //Use helper function to create indexed version of the geometry
+  //compute the tangents (used for normal mapping)
   crabGeometry.computeTangents();
   // Create material
   const cubeMaterial = new THREE.ShaderMaterial({
@@ -75,6 +80,7 @@ async function main() {
       cameraPositionWorld: { value: camera.position },
       lightColor: { value: new THREE.Color(settings.lightColor) },
       ambientColor: { value: new THREE.Color(settings.ambientColor) },
+      specPower : { value : settings.specPower},
       diffMap: { value: diffMap },
       normalMap: { value: normalMap },
       specularMap: { value: specularMap }
@@ -91,6 +97,7 @@ async function main() {
       cameraPositionWorld: { value: camera.position },
       lightColor: { value: new THREE.Color(settings.lightColor) },
       ambientColor: { value: new THREE.Color(settings.ambientColor) },
+      specPower : { value : settings.specPower},
       diffMap: { value: diffCrab },
       normalMap: { value: normalCrab },
       specularMap: { value: specularCrab }
@@ -111,13 +118,17 @@ async function main() {
   lightDirectionFolder.add(settings, 'lightDirectionZ', -1, 1).onChange(updateLightDirection);
 
   // For Light Color
-  const lightColorController = gui.addColor(settings, 'lightColor').onChange((color) => {
+  gui.addColor(settings, 'lightColor').onChange((color) => {
     material.uniforms.lightColor.value.set(color);
   });
   gui.add(settings, 'rotate').listen();
+
+  gui.add(settings, 'specPower').onChange(x=>{
+    material.uniforms.specPower.value = settings.specPower;
+  });
   
   // Create mesh
-  const cube = new THREE.Mesh(geometry, cubeMaterial);
+  const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
   const crab = new THREE.Mesh(crabGeometry, crabMaterial);
   mesh = cube;
   material = cubeMaterial;

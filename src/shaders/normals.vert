@@ -12,7 +12,8 @@ varying vec2 vUv;
     vTangent =  normalMatrix * tangent.xyz;
     vBitangent = normalMatrix *cross(normal, tangent.xyz);
     vNormal = normalMatrix * normal;
-    vUv = uv;
+     //Flip y direction because it's flipped on textures
+    vUv = vec2(uv.x,1.0-uv.y);
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
     vViewDirection = -mvPosition.xyz;
     gl_Position = projectionMatrix * mvPosition;
